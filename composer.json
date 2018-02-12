@@ -1,7 +1,6 @@
 {
     "name": "serbanblebea/shopify-app-manager",
     "description": "A management tool for creating and administrating Shopify Apps",
-    "keywords": ,
     "license": "MIT",
     "type": "project",
     "require": {
