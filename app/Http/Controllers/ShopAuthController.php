@@ -3,24 +3,36 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\ShopifyApi;
+use App\ShopifyAuth;
+use App\Store;
 
 class ShopAuthController extends Controller
 {
     function auth()
     {
-        header("Location: http://www.slabestecuserban.ro");
-        $api = new ShopifyApi();
-        $api->addStoreName("mihaidev")
-            ->addStoreUrl()
-            ->addCallbackUrl()
-            ->addScopes()
-            ->navigateToCallback();
-        dd($api);
+        $api = new ShopifyAuth();
+        $callback_url = $api->addStoreName("mihaidev")
+                            ->addStoreUrl()
+                            ->addCallbackUrl()
+                            ->addScopes()
+                            ->getCallbackUrl();
+        return redirect($callback_url);
     }
 
-    function callback()
+    function callback(Request $request)
     {
-        dd("ceva");
+        $api = new ShopifyAuth();
+        $token = $api->addStoreName($request->input('shop'))
+                     ->addStoreUrl()
+                     ->addCallbackUrl()
+                     ->addScopes()
+                     ->retriveToken();
+
+        Store::storeToken([
+            "app_id"      => 2,
+            "store_name"  => "Serban",
+            "store_email" => "slabestecuserban@gmail.com",
+            "store_token" => $token
+        ]);
     }
 }
