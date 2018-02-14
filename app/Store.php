@@ -7,18 +7,19 @@ use Exception;
 
 class Store extends Model
 {
-    protected $fillable = ["app_id", "store_name", "store_email", "store_token"];
+    protected $fillable = [
+        "store_name", "store_plan", "store_token", "store_owner", "store_domain", "store_email", "store_phone"
+    ];
 
     public static function storeToken(Array $data)
     {
         if($data["store_token"] !== null)
         {
             self::create([
-                "app_id"      => $data["app_id"],
-                "store_name"  => $data["store_name"],
-                "store_email" => $data["store_email"],
                 "store_token" => $data["store_token"]
             ]);
+
+            //TODO return store id
         } else {
             throw new Exception("The Token can not be null", 1);
         }

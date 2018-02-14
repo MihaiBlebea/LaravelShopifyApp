@@ -10,16 +10,20 @@ class CreateStoresTable extends Migration
     {
         Schema::create("stores", function (Blueprint $table) {
             $table->increments("id");
-            $table->integer("app_id");
             $table->string("store_name");
-            $table->string("store_email");
+            $table->string("store_plan");
             $table->string("store_token");
+            $table->string("store_owner");
+            $table->string("store_domain");
+            $table->string("store_email");
+            $table->string("store_phone");
+            $table->boolean("installed");
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists("stores");
     }
 }
