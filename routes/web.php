@@ -10,6 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get("/test", "ShopAuthController@test");
 Route::get("/shopify", "ShopAuthController@auth");
 Route::get("/callback", "ShopAuthController@callback");

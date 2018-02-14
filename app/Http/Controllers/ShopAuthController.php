@@ -8,6 +8,12 @@ use App\Store;
 
 class ShopAuthController extends Controller
 {
+    function test()
+    {
+        $apps = Store::find(1)->apps()->get();
+        dd($apps);
+    }
+
     function auth()
     {
         $api = new ShopifyAuth();
