@@ -12,7 +12,7 @@ class CreatePaymentsTable extends Migration
             $table->increments("id");
             $table->integer("store_id");
             $table->integer("app_id");
-            $table->double("price");
+            $table->double("price")->default(0.00);
             $table->timestamps();
         });
     }

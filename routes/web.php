@@ -11,5 +11,5 @@
 |
 */
 Route::get("/test", "ShopAuthController@test");
-Route::get("/shopify", "ShopAuthController@auth");
+Route::get("/shopify/{app}", "ShopAuthController@auth");
 Route::get("/callback", "ShopAuthController@callback");

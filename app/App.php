@@ -9,12 +9,17 @@ use App\Asset;
 class App extends Model
 {
     protected $fillable = [
-        "app_name", "app_slug", "app_key", "app_secret", "is_active"
+        "app_name", "app_slug", "app_key", "app_secret", "app_scopes", "is_active"
     ];
+
+    public function getRouteKeyName()
+    {
+        return "app_slug";
+    }
 
     public function stores()
     {
-        return $this->belongsToMany('App\Store', 'app_store');
+        return $this->belongsToMany('App\Store', 'app_store')->withTimestamps();
     }
 
     public function assets()

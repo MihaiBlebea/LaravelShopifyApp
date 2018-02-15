@@ -14,7 +14,7 @@ class CreateAssetsTable extends Migration
             $table->string("asset_name");
             $table->string("asset_type");
             $table->string("asset_path");
-            $table->boolean("is_active");
+            $table->boolean("is_active")->default(0);
             $table->timestamps();
         });
     }

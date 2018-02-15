@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\App;
+use App\ShopifyAuth;
 use Exception;
 
 class Store extends Model
@@ -15,21 +16,33 @@ class Store extends Model
     // Define many-to-many relation
     public function apps()
     {
-        return $this->belongsToMany('App\App', 'app_store');
+        return $this->belongsToMany('App\App', 'app_store')->withTimestamps();
     }
 
-    public static function storeToken(Array $data)
+    public function storeNewToken(ShopifyAuth $auth, Array $data)
     {
-        if($data["store_token"] !== null)
+        // Init the api config and receive the calling class
+        $api = $auth->api([
+            "store_token" => $data["store_token"],
+            "store_url" => $data["store_url"]
+        ]);
+
+        // Get store details from Shopify api
+        $details = $api->Shop->get();
+        
+        // Store details in database with the token
+        if($details)
         {
-            self::create([
-                "store_token" => $data["store_token"]
+            $this->create([
+                "store_token" => $data["store_token"],
+                "store_domain" => $data["store_url"],
+                "store_name" => $details["name"],
+                "store_plan" => $details["plan_name"],
+                "store_owner" => $details["shop_owner"],
+                "store_email" => $details["email"],
+                "store_phone" => $details["phone"]
             ]);
-
-            //TODO return store id
-        } else {
-            throw new Exception("The Token can not be null", 1);
         }
+        return $this;
     }
-
 }

@@ -18,32 +18,50 @@ class ShopifyAuth
 
     public function __construct()
     {
-        $this->configure["ApiKey"] = config('app.api_key');
-        $this->configure["SharedSecret"] = config('app.shared_secret');
+        $this->addCallbackUrl();
+    }
+
+    public function forApp(App $app)
+    {
+        $this->configure["ApiKey"]       = $app->app_key;
+        $this->configure["SharedSecret"] = $app->app_secret;
+        $this->scopes = $this->parseScopeString($app->app_scopes);
+        return $this;
+    }
+
+    public function withStoreUrl(String $store_url)
+    {
+        if(strpos($store_url, ".myshopify.com") == true)
+        {
+            $this->store_url = $store_url;
+        }
+        $this->configure['ShopUrl'] = $this->store_url;
+        return $this;
     }
 
     public function addStoreName(String $store_name)
     {
         if(strpos($store_name, ".myshopify.com") == true)
         {
-            $this->store_name = explode(".",$store_name)[0];
+            $this->store_name = explode(".", $store_name)[0];
         } else {
             $this->store_name = $store_name;
         }
         return $this;
     }
 
-    public function addStoreUrl(String $store_url = null)
+    private function parseScopeString(String $scopes = null)
     {
-        if($store_url !== null)
+        $result = [];
+        if($scopes !== null)
         {
-            $this->configure["ShopUrl"] = $store_url;
-        } elseif($this->store_name !== null) {
-            $this->configure["ShopUrl"] = $this->store_name . ".myshopify.com";
-        } else {
-            throw new Exception("Shop url could not be found", 1);
+            $scopes = explode(",", $scopes);
+            foreach($scopes as $scope)
+            {
+                array_push($result, trim($scope));
+            }
         }
-        return $this;
+        return $result;
     }
 
     public function addCallbackUrl(String $url = null)
@@ -65,22 +83,17 @@ class ShopifyAuth
         return $this;
     }
 
-    public function addScopes(Array $scopes = null)
-    {
-        if($scopes !== null)
-        {
-            $this->scopes = $scopes;
-        } elseif(config('app.scopes') !== null) {
-            $this->scopes = explode("|", config('app.scopes'));
-        } else {
-            throw new Exception("The scopes for this app were not found", 1);
-        }
-        return $this;
-    }
-
     public function getShopifyApi()
     {
         return ShopifySDK::config($this->configure);
+    }
+
+    public function api($data)
+    {
+        return ShopifySDK::config([
+            "ShopUrl"     => $data["store_url"],
+            "AccessToken" => $data["store_token"]
+        ]);
     }
 
     public function getConfig()
@@ -119,7 +132,7 @@ class ShopifyAuth
 
     public function getCallbackUrl()
     {
-        $this->getShopifyApi();
+        $api = $this->getShopifyApi();
         return $this->constructCallbackUrl();
     }
 
