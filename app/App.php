@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Store;
+use App\Asset;
 
 class App extends Model
 {
@@ -14,5 +15,10 @@ class App extends Model
     public function stores()
     {
         return $this->belongsToMany('App\Store', 'app_store');
+    }
+
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
     }
 }
