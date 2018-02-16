@@ -7,17 +7,10 @@ use App\ShopifyAuth;
 use App\Store;
 use App\App;
 use App\Asset;
+use Exception;
 
 class ShopAuthController extends Controller
 {
-    // function test()
-    // {
-    //     $apps = Store::find(1)->apps()->get();
-    //     // $assets = App::find(1)->assets()->get();
-    //     // $app = Asset::find(1)->app()->get();
-    //     dd($apps);
-    // }
-
     function auth(App $app, Request $request)
     {
         // Get auth callback url
@@ -36,7 +29,7 @@ class ShopAuthController extends Controller
     function callback(Request $request)
     {
         // Retrive the app by app slug
-        $app = App::where('app_slug', $request->session()->get("app_slug"))->first();
+        $app = App::where("app_slug", $request->session()->get("app_slug"))->first();
 
         // Retrive the token from the callback
         $api = new ShopifyAuth();
@@ -44,12 +37,21 @@ class ShopAuthController extends Controller
                      ->withStoreUrl($request->input("shop"))
                      ->retriveToken();
 
-        // Save data to Store model
-        $store = new Store();
-        $store->storeNewToken($api, [
-            "store_url" => $request->input("shop"),
-            "store_token" => $token
-        ]);
+        // CHeck if the store already bought the app
+        $store = Store::where("store_domain", $request->input("shop"))->first();
+        if($store !== null)
+        {
+            if($store->hasApp($app) == true)
+            {
+                throw new Exception("This store already has this app", 1);
+            }
+        } else {
+            $store = new Store();
+            $store->storeNewToken($api, [
+                "store_url" => $request->input("shop"),
+                "store_token" => $token
+            ])->updatePivotTable($app);
+        }
 
         // TODO check if data was really stored in the database
         return redirect("https://" . $request->input("shop") . "/admin/apps");

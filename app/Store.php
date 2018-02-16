@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\App;
 use App\ShopifyAuth;
 use Exception;
@@ -19,6 +20,14 @@ class Store extends Model
         return $this->belongsToMany('App\App', 'app_store')->withTimestamps();
     }
 
+    public function hasApp(App $app)
+    {
+        $result = DB::table("app_store")->where("app_id", $app->id)
+                                        ->where("store_id", $this->id)
+                                        ->first();
+        return ($result !== null) ? true : false;
+    }
+
     public function storeNewToken(ShopifyAuth $auth, Array $data)
     {
         // Init the api config and receive the calling class
@@ -29,11 +38,11 @@ class Store extends Model
 
         // Get store details from Shopify api
         $details = $api->Shop->get();
-        
+
         // Store details in database with the token
         if($details)
         {
-            $this->create([
+            $created = $this->create([
                 "store_token" => $data["store_token"],
                 "store_domain" => $data["store_url"],
                 "store_name" => $details["name"],
@@ -42,7 +51,15 @@ class Store extends Model
                 "store_email" => $details["email"],
                 "store_phone" => $details["phone"]
             ]);
+
+            return $created;
+        } else {
+            throw new Exception("Could not save the store " . $data["store_url"] . " in the database", 1);
         }
-        return $this;
+    }
+
+    public function updatePivotTable(App $app)
+    {
+        $this->apps()->attach($app->id);
     }
 }

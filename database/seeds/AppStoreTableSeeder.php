@@ -7,7 +7,7 @@ class AppStoreTableSeeder extends Seeder
     public $data = [
         [
             "app_id" => 1,
-            "store_id" => 1
+            "store_id" => 3
         ],
         [
             "app_id" => 1,
