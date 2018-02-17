@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\App;
+use App\ShopifyApi;
 
 class Asset extends Model
 {
@@ -14,5 +15,51 @@ class Asset extends Model
     public function app()
     {
         return $this->belongsTo('App\App');
+    }
+
+    public function install(String $type, ShopifyApi $api)
+    {
+        $file_path = $this->assetPath();
+        $theme_id = $this->getMainThemeId($api);
+
+        if(in_array($type, ["sections", "snippets", "assets"]) == true)
+        {
+            $asset = [
+                "key" => $type . "/" . $this->returnLiquid($type, $this->asset_name),
+                "value" => file_get_contents($file_path)
+            ];
+            return $api->getApi()->Theme($theme_id)->Asset->put($asset);
+        } else {
+            throw new Exception("Asset type not correct", 1);
+        }
+    }
+
+
+
+    public function getMainThemeId(ShopifyApi $api)
+    {
+        $themes = $api->getApi()->Theme->get();
+        foreach($themes as $theme)
+        {
+            if($theme["role"] == "main")
+            {
+                return $theme["id"];
+            }
+        }
+    }
+
+    private function returnLiquid(String $type, String $file)
+    {
+        if($type == "assets")
+        {
+            return $file;
+        } else {
+            return (strpos($file, ".liquid") == false) ? $file . ".liquid" : $file;
+        }
+    }
+
+    public function assetPath()
+    {
+        return config('app.url') . (($this->asset_path[0] == "/") ? $this->asset_path : "/" . $this->asset_path);
     }
 }

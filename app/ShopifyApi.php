@@ -6,7 +6,7 @@ use PHPShopify\AuthHelper;
 use PHPShopify\ShopifySDK;
 use Exception;
 
-class ShopifyAuth
+class ShopifyApi
 {
     public $configure = [];
 
@@ -26,6 +26,13 @@ class ShopifyAuth
         $this->configure["ApiKey"]       = $app->app_key;
         $this->configure["SharedSecret"] = $app->app_secret;
         $this->scopes = $this->parseScopeString($app->app_scopes);
+        return $this;
+    }
+
+    public function forStore(Store $store)
+    {
+        $this->configure['ShopUrl'] = $store->store_domain;
+        $this->configure["AccessToken"] = $store->store_token;
         return $this;
     }
 
@@ -83,7 +90,7 @@ class ShopifyAuth
         return $this;
     }
 
-    public function getShopifyApi()
+    public function getApi()
     {
         return ShopifySDK::config($this->configure);
     }
@@ -132,76 +139,13 @@ class ShopifyAuth
 
     public function getCallbackUrl()
     {
-        $api = $this->getShopifyApi();
+        $api = $this->getApi();
         return $this->constructCallbackUrl();
     }
 
     public function retriveToken()
     {
-        $api = $this->getShopifyApi();
+        $api = $this->getApi();
         return AuthHelper::getAccessToken();
     }
 }
-
-
-
-
-
-
-
-    // public function receiveCallback()
-    // {
-    //     $this->getConfigWithoutToken();
-    //     $token = PHPShopify\AuthHelper::getAccessToken();
-    //     $this->saveNewShop($token);
-    // }
-    //
-    // private function saveNewShop(String $token)
-    // {
-    //     if($this->shopIsUnique() == true)
-    //     {
-    //         $this->create([
-    //             "shop_name"  => $this->shop_name,
-    //             "shop_token" => $token
-    //         ]);
-    //     } else {
-    //         $this->where("shop_name", "=", $this->shop_name)->update([
-    //             "shop_token" => $token
-    //         ]);
-    //     }
-    // }
-    //
-    // private function shopIsUnique()
-    // {
-    //     $shop = $this->getShopByName($this->shop_name);
-    //     return ($shop == null) ? true : false;
-    // }
-    //
-    // public function shops()
-    // {
-    //     return $this->selectAll();
-    // }
-    //
-    // public function getShopByName(String $shop_name)
-    // {
-    //     return $this->where("shop_name", "=", $shop_name)->selectOne();
-    // }
-    //
-    // public function getApi(String $shop_name)
-    // {
-    //     $shop = $this->getShopByName($shop_name);
-    //     return $this->getConfigWithToken($shop->shop_token, $shop->shop_name);
-    // }
-    //
-    // public function getMainThemeId(String $shop_name)
-    // {
-    //     $api = $this->getApi($shop_name);
-    //     $themes = $api->Theme->get();
-    //     foreach($themes as $theme)
-    //     {
-    //         if($theme["role"] == "main")
-    //         {
-    //             return $theme["id"];
-    //         }
-    //     }
-    // }

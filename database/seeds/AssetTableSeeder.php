@@ -9,20 +9,20 @@ class AssetTableSeeder extends Seeder
         [
             "app_id" => 1,
             "asset_name" => "stylesheet",
-            "asset_type" => "asset",
-            "asset_path" => "/assets/stylesheet.css"
+            "asset_type" => "sections",
+            "asset_path" => "/files/sections/stylesheet.liquid"
         ],
         [
             "app_id" => 1,
             "asset_name" => "timer-controller",
-            "asset_type" => "snippet",
-            "asset_path" => "/snippet/timer.css"
+            "asset_type" => "snippets",
+            "asset_path" => "/files/snippets/stylesheet.liquid"
         ],
         [
             "app_id" => 2,
             "asset_name" => "js-controller",
-            "asset_type" => "asset",
-            "asset_path" => "/assets/controller.js"
+            "asset_type" => "assets",
+            "asset_path" => "/files/assets/stylesheet.js"
         ]
     ];
 

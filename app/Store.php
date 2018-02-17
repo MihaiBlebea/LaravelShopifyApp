@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\App;
-use App\ShopifyAuth;
+use App\ShopifyApi;
 use Exception;
 
 class Store extends Model
@@ -28,9 +28,9 @@ class Store extends Model
         return ($result !== null) ? true : false;
     }
 
-    public function storeNewToken(ShopifyAuth $auth, Array $data)
+    public static function storeNewToken(ShopifyApi $auth, Array $data)
     {
-        // Init the api config and receive the calling class
+        // Init the Shopify API class that we will need to make requests
         $api = $auth->api([
             "store_token" => $data["store_token"],
             "store_url" => $data["store_url"]
@@ -42,7 +42,7 @@ class Store extends Model
         // Store details in database with the token
         if($details)
         {
-            $created = $this->create([
+            $store = self::create([
                 "store_token" => $data["store_token"],
                 "store_domain" => $data["store_url"],
                 "store_name" => $details["name"],
@@ -52,7 +52,7 @@ class Store extends Model
                 "store_phone" => $details["phone"]
             ]);
 
-            return $created;
+            return $store;
         } else {
             throw new Exception("Could not save the store " . $data["store_url"] . " in the database", 1);
         }
