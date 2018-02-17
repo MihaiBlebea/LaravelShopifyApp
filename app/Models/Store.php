@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\App;
-use App\ShopifyApi;
+use App\Models\App;
+use App\Models\ShopifyApi;
 use Exception;
 
 class Store extends Model
@@ -17,7 +17,7 @@ class Store extends Model
     // Define many-to-many relation
     public function apps()
     {
-        return $this->belongsToMany('App\App', 'app_store')->withTimestamps();
+        return $this->belongsToMany('App\Models\App', 'app_store')->withTimestamps();
     }
 
     public function hasApp(App $app)

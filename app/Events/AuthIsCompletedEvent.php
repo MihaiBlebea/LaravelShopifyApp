@@ -9,8 +9,8 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\App;
-use App\Store;
+use App\Models\App;
+use App\Models\Store;
 
 class AuthIsCompletedEvent
 {

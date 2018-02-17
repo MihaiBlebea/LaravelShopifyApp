@@ -17,7 +17,7 @@ class CreateStoresTable extends Migration
             $table->string("store_domain")->nullable();
             $table->string("store_email")->nullable();
             $table->string("store_phone")->nullable();
-            $table->boolean("installed")->default(0);
+            $table->boolean("is_active")->default(0);
             $table->timestamps();
         });
     }

@@ -4,44 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Events\AuthIsCompletedEvent;
-use App\ShopifyApi;
-use App\Store;
-use App\App;
-use App\Asset;
+use App\Models\ShopifyApi;
+use App\Models\Store;
+use App\Models\App;
+use App\Models\Asset;
+use App\Models\PaymentHandler;
 use Exception;
 
 class ShopAuthController extends Controller
 {
-    function test()
-    {
-        $app = App::find(1);
-        $store = Store::find(3);
-        $api = new ShopifyApi();
-        $api = $api->forApp($app)->forStore($store);
-        // Asset::installSection($api);
-
-        $assets = $app->assets;
-
-        foreach($assets as $index => $asset)
-        {
-            switch($asset->asset_type)
-            {
-                case "sections":
-                    $response = $asset->install("sections", $api);
-                    break;
-                case "snippets":
-                    $response = $asset->install("snippets", $api);
-                    break;
-                case "assets":
-                    $response = $asset->install("assets", $api);
-                    break;
-                default:
-                    throw new Exception("Type of asset is not known", 1);
-            }
-            echo $asset->asset_type;
-        }
-    }
-
     function auth(App $app, Request $request)
     {
         // Get auth callback url
@@ -82,10 +53,18 @@ class ShopAuthController extends Controller
         ]);
         $store->updatePivotTable($app);
 
+        // Set up payment flow
+        $payment = $app->payment;
+        $payment_handler = new PaymentHandler($api);
+        $payment_callback_url = $payment_handler->figureType($payment);
+
+        //
         // Dispach app installed event
-        event(new AuthIsCompletedEvent($app, $store));
+        //TODO Move event trigger to the end of the auth flow
+        // event(new AuthIsCompletedEvent($app, $store));
 
         // Return user to the admin panel of his store
-        return redirect("https://" . $request->input("shop") . "/admin/apps");
+        return redirect($payment_callback_url)->with("app_slug", $app->app_slug);
+        // return redirect("https://" . $request->input("shop") . "/admin/apps");
     }
 }

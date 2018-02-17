@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\App;
-use App\ShopifyApi;
+use App\Models\App;
+use App\Models\ShopifyApi;
 
 class Asset extends Model
 {
@@ -14,7 +14,7 @@ class Asset extends Model
 
     public function app()
     {
-        return $this->belongsTo('App\App');
+        return $this->belongsTo('App\Models\App');
     }
 
     public function install(String $type, ShopifyApi $api)
@@ -33,8 +33,6 @@ class Asset extends Model
             throw new Exception("Asset type not correct", 1);
         }
     }
-
-
 
     public function getMainThemeId(ShopifyApi $api)
     {

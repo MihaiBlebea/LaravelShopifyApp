@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Store;
-use App\Asset;
+use App\Models\Store;
+use App\Models\Asset;
 
 class App extends Model
 {
@@ -19,11 +19,16 @@ class App extends Model
 
     public function stores()
     {
-        return $this->belongsToMany('App\Store', 'app_store')->withTimestamps();
+        return $this->belongsToMany('App\Models\Store', 'app_store')->withTimestamps();
     }
 
     public function assets()
     {
-        return $this->hasMany('App\Asset');
+        return $this->hasMany('App\Models\Asset');
+    }
+
+    public function payment()
+    {
+        return $this->hasOne('App\Models\Payment');
     }
 }

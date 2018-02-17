@@ -10,9 +10,12 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create("payments", function (Blueprint $table) {
             $table->increments("id");
-            $table->integer("store_id");
             $table->integer("app_id");
-            $table->double("price")->default(0.00);
+            $table->string("payment_name");
+            $table->string("payment_type");
+            $table->string("payment_callback");
+            $table->double("payment_price")->default(0);
+            $table->integer("payment_trial")->default(NULL);
             $table->timestamps();
         });
     }
