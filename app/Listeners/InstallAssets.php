@@ -16,9 +16,10 @@ class InstallAssets
 
     public function handle(AuthIsCompletedEvent $event)
     {
-        $api = new ShopifyApi();
-        $api = $api->forApp($event->app)->forStore($event->store);
-
+        $api = new ShopifyApi([
+            "app"   => $app,
+            "store" => $store
+        ]);
         $assets = $event->app->assets;
 
         foreach($assets as $index => $asset)

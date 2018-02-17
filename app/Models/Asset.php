@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\AuthInterface;
 use App\Models\App;
 use App\Models\ShopifyApi;
 
@@ -17,15 +18,15 @@ class Asset extends Model
         return $this->belongsTo('App\Models\App');
     }
 
-    public function install(String $type, ShopifyApi $api)
+    public function install(AuthInterface $api)
     {
         $file_path = $this->assetPath();
         $theme_id = $this->getMainThemeId($api);
 
-        if(in_array($type, ["sections", "snippets", "assets"]) == true)
+        if(in_array($this->asset_type, ["sections", "snippets", "assets"]) == true)
         {
             $asset = [
-                "key" => $type . "/" . $this->returnLiquid($type, $this->asset_name),
+                "key" => $this->asset_type . "/" . $this->returnLiquid(),
                 "value" => file_get_contents($file_path)
             ];
             return $api->getApi()->Theme($theme_id)->Asset->put($asset);
@@ -34,7 +35,7 @@ class Asset extends Model
         }
     }
 
-    public function getMainThemeId(ShopifyApi $api)
+    public function getMainThemeId(AuthInterface $api)
     {
         $themes = $api->getApi()->Theme->get();
         foreach($themes as $theme)
@@ -46,13 +47,13 @@ class Asset extends Model
         }
     }
 
-    private function returnLiquid(String $type, String $file)
+    private function returnLiquid()
     {
-        if($type == "assets")
+        if($this->asset_type == "assets")
         {
-            return $file;
+            return $this->asset_name;
         } else {
-            return (strpos($file, ".liquid") == false) ? $file . ".liquid" : $file;
+            return (strpos($this->asset_name, ".liquid") == false) ? $this->asset_name . ".liquid" : $this->asset_name;
         }
     }
 

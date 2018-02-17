@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Interfaces\AuthInterface;
 use App\Models\App;
 use App\Models\ShopifyApi;
 use Exception;
@@ -28,16 +29,10 @@ class Store extends Model
         return ($result !== null) ? true : false;
     }
 
-    public static function storeNewToken(ShopifyApi $auth, Array $data)
+    public static function storeNewToken(AuthInterface $api, Array $data)
     {
-        // Init the Shopify API class that we will need to make requests
-        $api = $auth->api([
-            "store_token" => $data["store_token"],
-            "store_url" => $data["store_url"]
-        ]);
-
         // Get store details from Shopify api
-        $details = $api->Shop->get();
+        $details = $api->getApi()->Shop->get();
 
         // Store details in database with the token
         if($details)

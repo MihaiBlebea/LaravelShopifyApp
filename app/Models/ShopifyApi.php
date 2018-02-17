@@ -2,62 +2,51 @@
 namespace App\Models;
 
 use PHPShopify;
+use App\Interfaces\AuthInterface;
 use PHPShopify\AuthHelper;
 use PHPShopify\ShopifySDK;
 use Exception;
 
-class ShopifyApi
+class ShopifyApi implements AuthInterface
 {
     public $configure = [];
-
-    public $store_name = null;
 
     public $callback_url = null;
 
     public $scopes = [];
 
-    public function __construct()
+    public function __construct(Array $data)
     {
+        if(isset($data["app"]) && isset($data["store"]))
+        {
+            $this->configure["ApiKey"]       = $data["app"]->app_key;
+            $this->configure["SharedSecret"] = $data["app"]->app_secret;
+            $this->configure["ShopUrl"]      = $data["store"]->store_domain;
+            $this->configure["AccessToken"]  = $data["store"]->store_token;
+            $this->scopes = $this->parseScopeString($data["app"]->app_scopes);
+
+        } elseif(isset($data["ApiKey"]) &&
+                 isset($data["SharedSecret"]) &&
+                 isset($data["ShopUrl"]) &&
+                 isset($data["scopes"])) {
+
+            $this->configure["ApiKey"]       = $data["ApiKey"];
+            $this->configure["SharedSecret"] = $data["SharedSecret"];
+            $this->configure["ShopUrl"]      = $data["ShopUrl"];
+            $this->scopes = $this->parseScopeString($data["scopes"]);
+
+        } elseif(isset($data["ShopUrl"]) && isset($data["AccessToken"]) && isset($data["scopes"])) {
+
+            $this->configure["ShopUrl"]     = $data["ShopUrl"];
+            $this->configure["AccessToken"] = $data["AccessToken"];
+            $this->scopes = $this->parseScopeString($data["scopes"]);
+        } else {
+            throw new Exception("This object could not be constructed, check config values", 1);
+        }
         $this->addCallbackUrl();
     }
 
-    public function forApp(App $app)
-    {
-        $this->configure["ApiKey"]       = $app->app_key;
-        $this->configure["SharedSecret"] = $app->app_secret;
-        $this->scopes = $this->parseScopeString($app->app_scopes);
-        return $this;
-    }
-
-    public function forStore(Store $store)
-    {
-        $this->configure['ShopUrl'] = $store->store_domain;
-        $this->configure["AccessToken"] = $store->store_token;
-        return $this;
-    }
-
-    public function withStoreUrl(String $store_url)
-    {
-        if(strpos($store_url, ".myshopify.com") == true)
-        {
-            $this->store_url = $store_url;
-        }
-        $this->configure['ShopUrl'] = $this->store_url;
-        return $this;
-    }
-
-    public function addStoreName(String $store_name)
-    {
-        if(strpos($store_name, ".myshopify.com") == true)
-        {
-            $this->store_name = explode(".", $store_name)[0];
-        } else {
-            $this->store_name = $store_name;
-        }
-        return $this;
-    }
-
-    private function parseScopeString(String $scopes = null)
+    public function parseScopeString(String $scopes = null)
     {
         $result = [];
         if($scopes !== null)
@@ -84,23 +73,9 @@ class ShopifyApi
         return $this;
     }
 
-    public function addToken(String $token)
-    {
-        $this->configure["AccessToken"] = $token;
-        return $this;
-    }
-
     public function getApi()
     {
         return ShopifySDK::config($this->configure);
-    }
-
-    public function api($data)
-    {
-        return ShopifySDK::config([
-            "ShopUrl"     => $data["store_url"],
-            "AccessToken" => $data["store_token"]
-        ]);
     }
 
     public function getConfig()
