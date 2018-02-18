@@ -8,7 +8,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        "App\Events\AuthIsCompletedEvent" => [
+        "App\Events\PaymentSetupCompletedEvent" => [
             "App\Listeners\InstallAssets",
             "App\Listeners\NewAppInstalledNotification"
         ],

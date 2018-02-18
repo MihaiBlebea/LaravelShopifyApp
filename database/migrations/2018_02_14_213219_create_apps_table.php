@@ -15,6 +15,7 @@ class CreateAppsTable extends Migration
             $table->string("app_key");
             $table->string("app_secret");
             $table->string("app_scopes")->nullable();
+            $table->string("app_admin_path")->nullable();
             $table->boolean("is_active")->default(0);
             $table->timestamps();
         });

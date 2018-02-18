@@ -23,6 +23,7 @@ class PaymentHandler
             "name"       => $payment->payment_name,
             "price"      => $payment->payment_price,
             "return_url" => config('app.url') . $payment->payment_callback,
+            "trial_days" => $payment->payment_trial,
             "test"       => (App::environment("local")) ? true : false
         ];
 
@@ -49,13 +50,63 @@ class PaymentHandler
         }
     }
 
+    public function activateOneTimePayment(String $id)
+    {
+        $response = $this->api->ApplicationCharge($id)->get();
+        if($this->handlePaymentResponse($response) == true)
+        {
+            $response = $this->activateOneTimeCharge($id);
+            if($response["status"] == "active")
+            {
+                return true;
+            } else {
+                throw new Exception("Payment was not activated", 1);
+            }
+        }
+    }
+
+    public function activateRecurringPayment(String $id)
+    {
+        $response = $this->api->RecurringApplicationCharge($id)->get();
+        if($this->handlePaymentResponse($response) == true)
+        {
+            $response = $this->activateRecurringCharge($id);
+            if($response["status"] == "active")
+            {
+                return true;
+            } else {
+                throw new Exception("Payment was not activated", 1);
+            }
+        }
+    }
+
+    private function handlePaymentResponse($response)
+    {
+        if($response["status"] == "accepted")
+        {
+            return true;
+        } else {
+            throw new Exception("Payment was declined", 1);
+        }
+    }
+
     public function getAllRecurringCharges()
     {
         return $this->api->RecurringApplicationCharge->get();
     }
 
-    public function activateRecurringCharge(String $id)
+    private function activateOneTimeCharge(String $id)
+    {
+        return $this->api->ApplicationCharge($id)->activate();
+    }
+
+    private function activateRecurringCharge(String $id)
     {
         return $this->api->RecurringApplicationCharge($id)->activate();
+    }
+
+    public function removePayment(String $id)
+    {
+        return $this->api->RecurringApplicationCharge($id)->delete();
     }
 }

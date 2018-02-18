@@ -12,7 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Models\App;
 use App\Models\Store;
 
-class AuthIsCompletedEvent
+class PaymentSetupCompletedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

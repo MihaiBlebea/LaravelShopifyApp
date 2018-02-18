@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Events\PaymentSetupCompletedEvent;
 
 class NewAppInstalledNotification
 {
@@ -12,7 +13,7 @@ class NewAppInstalledNotification
         //
     }
 
-    public function handle($event)
+    public function handle(PaymentSetupCompletedEvent $event)
     {
         //
     }

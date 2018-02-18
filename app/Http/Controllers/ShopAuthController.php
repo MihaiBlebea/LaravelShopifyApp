@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Events\AuthIsCompletedEvent;
 use App\Models\ShopifyApi;
 use App\Models\Store;
 use App\Models\App;
@@ -25,7 +24,8 @@ class ShopAuthController extends Controller
         $callback_url = $api->getCallbackUrl();
 
         // Redirect to callback
-        return redirect($callback_url)->with("app_slug", $app->app_slug);
+        return redirect($callback_url)
+                ->with("app_slug", $app->app_slug);
     }
 
     function callback(Request $request)
@@ -44,7 +44,7 @@ class ShopAuthController extends Controller
             ]);
             $token = $api->retriveToken();
 
-            // CHeck if the store already bought the app
+            // Check if the store already bought the app
             $store = Store::where("store_domain", $request->input("shop"))->first();
             if($store !== null && $store->hasApp($app) == true)
             {
@@ -58,6 +58,8 @@ class ShopAuthController extends Controller
                 "AccessToken" => $token,
                 "scopes"      => $app->app_scopes
             ]);
+
+            //Store token in database and update the pivot table
             $store = Store::storeNewToken($api, [
                 "store_url" => $request->input("shop"),
                 "store_token" => $token
@@ -69,16 +71,10 @@ class ShopAuthController extends Controller
             $payment_handler = new PaymentHandler($api);
             $payment_callback_url = $payment_handler->charge($payment);
 
-            //
-            // Dispach app installed event
-            //TODO Move event trigger to the end of the auth flow
-            // event(new AuthIsCompletedEvent($app, $store));
-
-            // Return user to the admin panel of his store
+            // Redirect user to the payment activation
             return redirect($payment_callback_url)
                     ->with("app_slug", $app->app_slug)
                     ->with("store_id", $store->id);
-            // return redirect("https://" . $request->input("shop") . "/admin/apps");
         } else {
             throw new Exception("requested app not found in database", 1);
         }

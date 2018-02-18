@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Events\AuthIsCompletedEvent;
+use App\Events\PaymentSetupCompletedEvent;
 use App\Models\ShopifyApi;
 
 class InstallAssets
@@ -14,11 +14,11 @@ class InstallAssets
         //
     }
 
-    public function handle(AuthIsCompletedEvent $event)
+    public function handle(PaymentSetupCompletedEvent $event)
     {
         $api = new ShopifyApi([
-            "app"   => $app,
-            "store" => $store
+            "app"   => $event->app,
+            "store" => $event->store
         ]);
         $assets = $event->app->assets;
 
@@ -27,13 +27,13 @@ class InstallAssets
             switch($asset->asset_type)
             {
                 case "sections":
-                    $response = $asset->install("sections", $api);
+                    $response = $asset->install($api);
                     break;
                 case "snippets":
-                    $response = $asset->install("snippets", $api);
+                    $response = $asset->install($api);
                     break;
                 case "assets":
-                    $response = $asset->install("assets", $api);
+                    $response = $asset->install($api);
                     break;
                 default:
                     throw new Exception("Type of asset is not known", 1);
