@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Interfaces\AuthInterface;
+use App\Interfaces\StoreInterface;
 use App\Models\App;
 use App\Models\ShopifyApi;
 use Exception;
 
-class Store extends Model
+class Store extends Model implements StoreInterface
 {
     protected $fillable = [
         "store_name", "store_plan", "store_token", "store_owner", "store_domain", "store_email", "store_phone"

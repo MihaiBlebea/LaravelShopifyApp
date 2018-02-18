@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Interfaces\AuthInterface;
+use App\Interfaces\PaymentInterface;
 use App\Models\ShopifyApi;
 use App\Models\Payment;
 use Exception;
 use App;
 
-class PaymentHandler
+class PaymentHandler implements PaymentInterface
 {
     private $api = null;
 
