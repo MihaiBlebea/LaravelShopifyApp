@@ -11,6 +11,19 @@ use App\Models\Store;
 
 class PaymentController extends Controller
 {
+    function deleteAsset(App $app, Request $request)
+    {
+        $store = Store::where("store_domain", $request->input("store"))->first();
+        $api = new ShopifyApi([
+            "store" => $store,
+            "app"   => $app
+        ]);
+
+        $asset = new Asset();
+        $response = $asset->delete($api, "snippets/timer-controller.liquid");
+        dd($response);
+    }
+
     function getAllPayments(App $app, Request $request)
     {
         $store = Store::where("store_domain", $request->input("store"))->first();
