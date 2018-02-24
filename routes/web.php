@@ -11,4 +11,5 @@ Route::prefix("payment")->group(function () {
 });
 
 Route::get("/test", "ShopAuthController@test");
-Route::get("/delete/{app}", "PaymentController@deleteAsset");
+Route::get("/delete/{app}", "PaymentController@deleteApp");
+Route::get("/install/{app}", "PaymentController@installApp");

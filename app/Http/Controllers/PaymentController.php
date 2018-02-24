@@ -6,39 +6,50 @@ use Illuminate\Http\Request;
 use App\Events\PaymentSetupCompletedEvent;
 use App\Models\ShopifyApi;
 use App\Models\PaymentHandler;
+use App\Models\InstallHandler;
 use App\Models\App;
 use App\Models\Store;
 use App\Models\Asset;
 
 class PaymentController extends Controller
 {
-    function deleteAsset(App $app, Request $request)
+    protected $api;
+
+    function __construct(Request $request, App $app)
     {
-        $store = Store::where("store_domain", $request->input("store"))->first();
+        $store = Store::where("store_domain", $request->input("shop"))->first();
         $api = new ShopifyApi([
             "store" => $store,
             "app"   => $app
         ]);
+        $this->api = $api;
+    }
 
-        $asset = new Asset();
-        $response = Asset::deleteAssets($api, "locales/pt-PT.json");
+    function deleteApp(App $app, Request $request)
+    {
+        $api = $this->api;
+
+        $install_handler = new InstallHandler($api);
+        $response = $install_handler->uninstallApp($app);
+        dd($response);
+    }
+
+    function installApp(App $app, Request $request)
+    {
+        $api = $this->api;
+
+        $install_handler = new InstallHandler($api);
+        $response = $install_handler->installApp($app);
         dd($response);
     }
 
     function getAllPayments(App $app, Request $request)
     {
-        $store = Store::where("store_domain", $request->input("store"))->first();
-        $api = new ShopifyApi([
-            "store" => $store,
-            "app"   => $app
-        ]);
+        $api = $this->api;
+
         $payment_handler = new PaymentHandler($api);
         $charges = $payment_handler->getAllRecurringCharges();
 
-        // foreach($charges as $charge)
-        // {
-        //     $payment_handler->removePayment($charge["id"]);
-        // }
         dd($charges);
     }
 
@@ -75,6 +86,7 @@ class PaymentController extends Controller
                 $response = $payment_handler->activateOneTimePayment($charge_id);
             }
 
+            // Check if payment flow result is TRUE
             if($response == true)
             {
                 // Finish the auth and payment process
