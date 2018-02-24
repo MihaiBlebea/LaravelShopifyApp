@@ -18,7 +18,7 @@ class ShopAuthController extends Controller
         $api = new ShopifyApi([
             "ApiKey"       => $app->app_key,
             "SharedSecret" => $app->app_secret,
-            "ShopUrl"      => $request->input("store"),
+            "ShopUrl"      => $request->input("shop"),
             "scopes"       => $app->app_scopes
         ]);
         $callback_url = $api->getCallbackUrl();

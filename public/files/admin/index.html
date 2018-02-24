@@ -2,6 +2,7 @@
     <head>
         <link rel="stylesheet" type="text/css" href="../../css/seaff.css">
         <script src="https://cdn.shopify.com/s/assets/external/app.js"></script>
+
         <script>
             ShopifyApp.init({
                 apiKey: "138d8cedf09b6e8befd4f6492be75691",
@@ -14,6 +15,25 @@
               alert("Ready");
             });
             ShopifyApp.flashNotice("Unicorn was created successfully.");
+        </script>
+
+        <script type='text/javascript'>
+            // If the current window is the 'parent', change the URL by setting location.href
+            if(window.top == window.self)
+            {
+                // Redirect the user to the auth flow in Laravel if the app is not installed yet
+                window.top.location.href = "/auth/shopify/discount-hero?shop=mihaidev.myshopify.com";
+
+            // If the current window is the 'child', change the parent's URL with postMessage
+            } else {
+                alert("ceva");
+                message = JSON.stringify({
+                    message: "Shopify.API.remoteRedirect",
+                    data: { location: window.location.origin + "/auth/shopify?shop=mihaidev" }
+                });
+                console.log("This is the message", message);
+                window.parent.postMessage(message, "https://mihaidev.myshopify.com");
+            }
         </script>
     </head>
     <body>

@@ -1,6 +1,6 @@
 <?php
 
-Route::prefix("auth")->group(function () {
+Route::middleware("frame")->prefix("auth")->group(function () {
     Route::get("/shopify/{app}", "ShopAuthController@auth");
     Route::get("/callback", "ShopAuthController@callback")->name("auth.callback");
 });
