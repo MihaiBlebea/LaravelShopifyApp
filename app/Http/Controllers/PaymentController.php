@@ -8,6 +8,7 @@ use App\Models\ShopifyApi;
 use App\Models\PaymentHandler;
 use App\Models\App;
 use App\Models\Store;
+use App\Models\Asset;
 
 class PaymentController extends Controller
 {
@@ -20,7 +21,7 @@ class PaymentController extends Controller
         ]);
 
         $asset = new Asset();
-        $response = $asset->delete($api, "snippets/timer-controller.liquid");
+        $response = Asset::deleteAssets($api, "locales/pt-PT.json");
         dd($response);
     }
 

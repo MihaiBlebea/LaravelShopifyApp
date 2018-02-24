@@ -62,10 +62,14 @@ class Asset extends Model
         return config('app.url') . (($this->asset_path[0] == "/") ? $this->asset_path : "/" . $this->asset_path);
     }
 
-    public function delete(AuthInterface $api, String $id)
+    protected function deleteAsset(AuthInterface $api, String $key)
     {
         $theme_id = $this->getMainThemeId($api);
+        return $api->getApi()->Theme($theme_id)->Asset->delete(["asset[key]" => $key]);
+    }
 
-        $api->getApi()->Theme($theme_id)->Asset($id)->delete();
+    public static function __call($name, $args)
+    {
+        return call_user_func_array(array(__CLASS__, "deleteAsset"), $args);
     }
 }
