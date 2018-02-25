@@ -13,58 +13,15 @@ use App\Models\Asset;
 
 class PaymentController extends Controller
 {
-    protected $api = null;
-
-    function __construct(Request $request, App $app)
-    {
-        if(isset($request) && isset($app))
-        {
-            $store = Store::where("store_domain", $request->input("shop"))->first();
-            $api = new ShopifyApi([
-                "store" => $store,
-                "app"   => $app
-            ]);
-            $this->api = $api;
-        }
-    }
-
-    function deleteApp(App $app, Request $request)
-    {
-        $api = $this->api;
-
-        $install_handler = new InstallHandler($api);
-        $response = $install_handler->uninstallApp($app);
-        dd($response);
-    }
-
-    function installApp(App $app, Request $request)
-    {
-        $api = $this->api;
-
-        $install_handler = new InstallHandler($api);
-        $response = $install_handler->installApp($app);
-        dd($response);
-    }
-
-    function getAllPayments(App $app, Request $request)
-    {
-        $api = $this->api;
-
-        $payment_handler = new PaymentHandler($api);
-        $charges = $payment_handler->getAllRecurringCharges();
-
-        dd($charges);
-    }
-
-    function callback(Request $request)
+    function paymentCallback(Request $request)
     {
         // Get variables from request
-        $app_slug = $request->session()->get("app_slug");
-        $store_id = $request->session()->get("store_id");
-        $charge_id = $request->input("charge_id");
+        $app_slug     = $request->session()->get("app_slug");
+        $store_domain = $request->session()->get("store_domain");
+        $charge_id    = $request->input("charge_id");
 
         $app = App::where("app_slug", $app_slug)->first();
-        $store = Store::where("id", $store_id)->first();
+        $store = Store::where("store_domain", $store_domain)->first();
 
         // Check if app and store are found
         if($app !== null && $store !== null)

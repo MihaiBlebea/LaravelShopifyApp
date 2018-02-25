@@ -29,9 +29,9 @@
                 alert("ceva");
                 message = JSON.stringify({
                     message: "Shopify.API.remoteRedirect",
-                    data: { location: window.location.origin + "/auth/shopify?shop=mihaidev" }
+                    data: { location: window.location.origin + "/auth/shopify/discount-hero?shop=mihaidev.myshopify.com" }
                 });
-                console.log("This is the message", message);
+
                 window.parent.postMessage(message, "https://mihaidev.myshopify.com");
             }
         </script>

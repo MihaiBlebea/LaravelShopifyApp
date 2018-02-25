@@ -17,7 +17,6 @@ class InstallHandlerTest extends TestCase
 {
     use FreshAndSeeded;
 
-
     private $store_domain    = "mihaidev.myshopify.com";
 
     private $app_slug        = "discount-hero";

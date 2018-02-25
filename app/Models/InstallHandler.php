@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use App\Interfaces\AuthInterface;
+use App\Interfaces\ApiInterface;
+use App\Interfaces\InstallInterface;
 use App\Models\ShopifyApi;
 use App\Models\App;
 use App\Models\Asset;
 
-class InstallHandler
+class InstallHandler implements InstallInterface
 {
     private $api = null;
 
-    public function __construct(AuthInterface $api)
+    public function __construct(ApiInterface $api)
     {
         $this->api = $api->getApi();
     }

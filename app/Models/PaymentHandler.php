@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\ApiInterface;
 use App\Interfaces\AuthInterface;
 use App\Interfaces\PaymentInterface;
 use App\Models\ShopifyApi;
@@ -13,9 +14,12 @@ class PaymentHandler implements PaymentInterface
 {
     private $api = null;
 
-    public function __construct(AuthInterface $api)
+    public function __construct($api)
     {
-        $this->api = $api->getApi();
+        if($api instanceof ApiInterface || $api instanceof AuthInterface)
+        {
+            $this->api = $api->getApi();
+        }
     }
 
     public function charge(Payment $payment)

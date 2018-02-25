@@ -2,12 +2,11 @@
 
 namespace App\Interfaces;
 
-use App\Interfaces\AuthInterface;
 use App\Models\Payment;
 
 interface PaymentInterface
 {
-    public function __construct(AuthInterface $api);
+    public function __construct($api);
 
     public function charge(Payment $payment);
 

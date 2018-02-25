@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ShopifyApi;
+use App\Models\AuthHandler;
 use App\Models\Store;
 use App\Models\App;
 use App\Models\Asset;
@@ -15,7 +16,7 @@ class ShopAuthController extends Controller
     function auth(App $app, Request $request)
     {
         // Get auth callback url
-        $api = new ShopifyApi([
+        $api = new AuthHandler([
             "ApiKey"       => $app->app_key,
             "SharedSecret" => $app->app_secret,
             "ShopUrl"      => $request->input("shop"),
@@ -28,15 +29,15 @@ class ShopAuthController extends Controller
                 ->with("app_slug", $app->app_slug);
     }
 
-    function callback(Request $request)
+    function authCallback(Request $request)
     {
         // Retrive the app by app slug
         $app = App::where("app_slug", $request->session()->get("app_slug"))->first();
-
+        
         if($app !== null)
         {
             // Retrive the token from the callback
-            $api = new ShopifyApi([
+            $api = new AuthHandler([
                 "ApiKey"       => $app->app_key,
                 "SharedSecret" => $app->app_secret,
                 "ShopUrl"      => $request->input("shop"),
@@ -53,7 +54,7 @@ class ShopAuthController extends Controller
             }
 
             // Constrct new api object with token
-            $api = new ShopifyApi([
+            $api = new AuthHandler([
                 "ShopUrl"     => $request->input("shop"),
                 "AccessToken" => $token,
                 "scopes"      => $app->app_scopes
@@ -74,9 +75,9 @@ class ShopAuthController extends Controller
             // Redirect user to the payment activation
             return redirect($payment_callback_url)
                     ->with("app_slug", $app->app_slug)
-                    ->with("store_id", $store->id);
+                    ->with("store_domain", $store->store_domain);
         } else {
-            throw new Exception("requested app not found in database", 1);
+            throw new Exception("Requested app not found in database", 1);
         }
     }
 }
