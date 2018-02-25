@@ -65,4 +65,11 @@ class PaymentHandlerTest extends TestCase
         $payment_handler = new PaymentHandler($auth_handler);
         $this->assertInstanceOf(PaymentHandler::class, $payment_handler);
     }
+
+    // public function testCreateChargeMethod()
+    // {
+    //     $payment = $app->payment;
+    //     $url = $this->payment_handler->createCharge($payment);
+    //     // dd($url);
+    // }
 }

@@ -33,7 +33,7 @@ class ShopAuthController extends Controller
     {
         // Retrive the app by app slug
         $app = App::where("app_slug", $request->session()->get("app_slug"))->first();
-        
+
         if($app !== null)
         {
             // Retrive the token from the callback

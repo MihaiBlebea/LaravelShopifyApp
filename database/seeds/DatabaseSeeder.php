@@ -9,7 +9,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StoreTableSeeder::class,
             AppTableSeeder::class,
-            // AppStoreTableSeeder::class,
+            AppStoreTableSeeder::class,
             AssetTableSeeder::class,
             PaymentTableSeeder::class
         ]);

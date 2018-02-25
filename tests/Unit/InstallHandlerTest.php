@@ -49,8 +49,9 @@ class InstallHandlerTest extends TestCase
 
     // Tests start here
 
-    public function testConstructInstallHandlerObject()
+    public function testConstructInstallHandler()
     {
+        $install_handler = new InstallHandler($this->api);
         $this->assertInstanceOf(InstallHandler::class, $this->install_handler);
     }
 
