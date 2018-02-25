@@ -16,15 +16,28 @@ class InstallHandler
         $this->api = $api->getApi();
     }
 
+    /**
+     * @param App instance
+     * @return true if all assets have been installed or
+     * @return false if any one of the assets failed to install
+     *
+     **/
+
     public function installApp(App $app)
     {
         $assets = $app->assets;
         $theme_id = $this->getMainThemeId();
 
+        $result = true;
         foreach($assets as $asset)
         {
             $response = $this->install($asset, $theme_id);
+            if($response["key"] !== $this->getAssetKey($asset))
+            {
+                $result = false;
+            }
         }
+        return $result;
     }
 
     public function install(Asset $asset, String $theme_id)
@@ -72,24 +85,42 @@ class InstallHandler
         }
     }
 
+    public function getAsset(String $theme_id, String $key)
+    {
+        return $this->api->Theme($theme_id)->Asset->get(["asset[key]" => $key]);
+    }
+
     private function assetPath(Asset $asset)
     {
         return config('app.url') . (($asset->asset_path[0] == "/") ? $asset->asset_path : "/" . $asset->asset_path);
     }
 
-    public function deleteAsset(String $theme_id, String $key)
+    private function deleteAsset(String $theme_id, String $key)
     {
         return $this->api->Theme($theme_id)->Asset->delete(["asset[key]" => $key]);
     }
+
+    /**
+     * @param App instance
+     * @return true if all assets have been uninstalled or
+     * @return false if any one of the assets failed to uninstall
+     *
+     **/
 
     public function uninstallApp(App $app)
     {
         $theme_id = $this->getMainThemeId();
         $assets = $app->assets;
 
+        $result = true;
         foreach($assets as $asset)
         {
             $response = $this->deleteAsset($theme_id, $this->getAssetKey($asset));
+            if($response !== [])
+            {
+                $result = false;
+            }
         }
+        return $result;
     }
 }

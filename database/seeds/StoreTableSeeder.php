@@ -6,32 +6,32 @@ use App\Models\Store;
 class StoreTableSeeder extends Seeder
 {
     public $data = [
-        // [
-        //     "store_name" => "Mihaidev",
-        //     "store_plan" => "Basic",
-        //     "store_token" => "dasdasfefgsgvsdvs",
-        //     "store_owner" => "Mihai Blebea",
-        //     "store_domain" => "mihaidev.myshopify.com",
-        //     "store_email" => "mihaiserban.blebea@gmail.com",
-        //     "store_phone" => "0757103898"
-        // ],
         [
-            "store_name" => "Canton",
-            "store_plan" => "Profesional",
-            "store_token" => "dasdasfefgsgvsdvs",
-            "store_owner" => "Jen",
-            "store_domain" => "canton-tea.myshopify.com",
-            "store_email" => "canton@gmail.com",
-            "store_phone" => "0757103898"
+            "store_name"   => "mihaidev",
+            "store_plan"   => "affiliate",
+            "store_token"  => "20c2490ba31418dad49085f9517add33",
+            "store_owner"  => "mihaidev Admin",
+            "store_domain" => "mihaidev.myshopify.com",
+            "store_email"  => "mihaiserban.blebea@gmail.com",
+            "store_phone"  => "0757103898"
         ],
         [
-            "store_name" => "ChristinaStore",
-            "store_plan" => "Basic",
-            "store_token" => "dasdasfefgsgvsdvs",
-            "store_owner" => "Cristina Aliman",
+            "store_name"   => "Canton",
+            "store_plan"   => "Profesional",
+            "store_token"  => "dasdasfefgsgvsdvs",
+            "store_owner"  => "Jen",
+            "store_domain" => "canton-tea.myshopify.com",
+            "store_email"  => "canton@gmail.com",
+            "store_phone"  => "0757103898"
+        ],
+        [
+            "store_name"   => "ChristinaStore",
+            "store_plan"   => "Basic",
+            "store_token"  => "dasdasfefgsgvsdvs",
+            "store_owner"  => "Cristina Aliman",
             "store_domain" => "ctistina-store.myshopify.com",
-            "store_email" => "mihaiserban.blebea@gmail.com",
-            "store_phone" => "0757103898"
+            "store_email"  => "mihaiserban.blebea@gmail.com",
+            "store_phone"  => "0757103898"
         ]
     ];
 

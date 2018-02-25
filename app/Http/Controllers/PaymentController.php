@@ -13,16 +13,19 @@ use App\Models\Asset;
 
 class PaymentController extends Controller
 {
-    protected $api;
+    protected $api = null;
 
     function __construct(Request $request, App $app)
     {
-        $store = Store::where("store_domain", $request->input("shop"))->first();
-        $api = new ShopifyApi([
-            "store" => $store,
-            "app"   => $app
-        ]);
-        $this->api = $api;
+        if(isset($request) && isset($app))
+        {
+            $store = Store::where("store_domain", $request->input("shop"))->first();
+            $api = new ShopifyApi([
+                "store" => $store,
+                "app"   => $app
+            ]);
+            $this->api = $api;
+        }
     }
 
     function deleteApp(App $app, Request $request)
