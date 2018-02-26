@@ -2,9 +2,11 @@
 
 namespace App\Interfaces;
 
+use App\Models\Store;
+
 interface ApiInterface
 {
-    public function __construct(Array $data);
+    public function __construct(Store $store);
 
     public function getApi();
 }

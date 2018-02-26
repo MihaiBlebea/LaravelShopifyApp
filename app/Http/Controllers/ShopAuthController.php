@@ -44,7 +44,7 @@ class ShopAuthController extends Controller
                 "scopes"       => $app->app_scopes
             ]);
             $token = $api->retriveToken();
-
+            
             // Check if the store already bought the app
             $store = Store::where("store_domain", $request->input("shop"))->first();
             if($store !== null && $store->hasApp($app) == true)
@@ -70,7 +70,7 @@ class ShopAuthController extends Controller
             // Set up payment flow
             $payment = $app->payment;
             $payment_handler = new PaymentHandler($api);
-            $payment_callback_url = $payment_handler->charge($payment);
+            $payment_callback_url = $payment_handler->createCharge($payment);
 
             // Redirect user to the payment activation
             return redirect($payment_callback_url)

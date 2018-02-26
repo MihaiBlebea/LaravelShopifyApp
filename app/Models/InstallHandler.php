@@ -23,7 +23,6 @@ class InstallHandler implements InstallInterface
      * @return false if any one of the assets failed to install
      *
      **/
-
     public function installApp(App $app)
     {
         $assets = $app->assets;
@@ -61,6 +60,7 @@ class InstallHandler implements InstallInterface
     private function getMainThemeId()
     {
         $themes = $this->api->Theme->get();
+
         foreach($themes as $theme)
         {
             if($theme["role"] == "main")

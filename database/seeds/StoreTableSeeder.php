@@ -9,7 +9,7 @@ class StoreTableSeeder extends Seeder
         [
             "store_name"   => "mihaidev",
             "store_plan"   => "affiliate",
-            "store_token"  => "20c2490ba31418dad49085f9517add33",
+            "store_token"  => "2d4b2adb092b609943672876b075d4ab",
             "store_owner"  => "mihaidev Admin",
             "store_domain" => "mihaidev.myshopify.com",
             "store_email"  => "mihaiserban.blebea@gmail.com",

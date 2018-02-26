@@ -10,7 +10,4 @@ Route::prefix("payment")->group(function () {
     Route::get("/all/{app}", "PaymentController@getAllPayments");
 });
 
-Route::get("/index", "PaymentController@index");
-Route::get("/test", "ShopAuthController@test");
-Route::get("/delete/{app}", "PaymentController@deleteApp");
-Route::get("/install/{app}", "PaymentController@installApp");
+Route::get("/index/{app}", "TestController@index");

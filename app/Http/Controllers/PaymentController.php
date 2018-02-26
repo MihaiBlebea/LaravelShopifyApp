@@ -32,19 +32,19 @@ class PaymentController extends Controller
                 "store" => $store
             ]);
             $payment_handler = new PaymentHandler($api);
-
-            $response = false;
-            if($app->payment->payment_type == "recurring_charge")
-            {
-                // Check if payment is accepted or declined and activate it
-                $response = $payment_handler->activateRecurringPayment($charge_id);
-            }
-
-            if($app->payment->payment_type == "one_time_charge")
-            {
-                // Check if payment is accepted or declined and activate it
-                $response = $payment_handler->activateOneTimePayment($charge_id);
-            }
+            $payment_handler->activateCharge($app, $charge_id);
+            // $response = false;
+            // if($app->payment->payment_type == "recurring_charge")
+            // {
+            //     // Check if payment is accepted or declined and activate it
+            //     $response = $payment_handler->activateRecurringPayment($charge_id);
+            // }
+            //
+            // if($app->payment->payment_type == "one_time_charge")
+            // {
+            //     // Check if payment is accepted or declined and activate it
+            //     $response = $payment_handler->activateOneTimePayment($charge_id);
+            // }
 
             // Check if payment flow result is TRUE
             if($response == true)

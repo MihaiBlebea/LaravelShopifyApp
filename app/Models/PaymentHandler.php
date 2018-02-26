@@ -7,10 +7,11 @@ use App\Interfaces\AuthInterface;
 use App\Interfaces\PaymentInterface;
 use App\Models\ShopifyApi;
 use App\Models\Payment;
+use App\Models\App;
 use Exception;
-use App;
+use App as RootApp;
 
-class PaymentHandler implements PaymentInterface
+class PaymentHandler
 {
     private $api = null;
 
@@ -21,7 +22,6 @@ class PaymentHandler implements PaymentInterface
         if($api instanceof ApiInterface || $api instanceof AuthInterface)
         {
             $this->api = $api->getApi();
-            dd($this->api);
         }
     }
 
@@ -32,7 +32,7 @@ class PaymentHandler implements PaymentInterface
             "price"      => $payment->payment_price,
             "return_url" => config('app.url') . $payment->payment_callback,
             "trial_days" => $payment->payment_trial,
-            "test"       => (App::environment("local")) ? true : false
+            "test"       => (RootApp::environment("local")) ? true : false
         ];
         $this->charge = $charge;
 
@@ -53,7 +53,7 @@ class PaymentHandler implements PaymentInterface
     }
 
     // Send charge to store, not activated yet
-    public function setCharge(Payment $payment)
+    private function setCharge(Payment $payment)
     {
         switch($payment->payment_type)
         {
@@ -104,7 +104,7 @@ class PaymentHandler implements PaymentInterface
         if($this->isPaymentAccepted($response) == true)
         {
             $response = $this->activateOneTime($charge_id);
-            return $this->isPaymentActive($response)
+            return $this->isPaymentActive($response);
         }
     }
 

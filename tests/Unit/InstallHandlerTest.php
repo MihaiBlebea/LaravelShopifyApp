@@ -37,10 +37,7 @@ class InstallHandlerTest extends TestCase
         $app   = App::where("app_slug", $this->app_slug)->first();
         $store = Store::where("store_domain", $this->store_domain)->first();
 
-        $api = new ShopifyApi([
-            "store" => $store,
-            "app"   => $app
-        ]);
+        $api = new ShopifyApi($store);
 
         $this->shopify_app     = $app;
         $this->api             = $api;

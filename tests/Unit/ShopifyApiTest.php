@@ -22,8 +22,6 @@ class ShopifyApiTest extends TestCase
 
     private $api          = null;
 
-    private $shopify_app  = null;
-
     private $store        = null;
 
 
@@ -33,24 +31,17 @@ class ShopifyApiTest extends TestCase
 
         $this->refreshAndSeedDatabase();
 
-        $app   = App::where("app_slug", $this->app_slug)->first();
         $store = Store::where("store_domain", $this->store_domain)->first();
 
-        $api = new ShopifyApi([
-            "store" => $store,
-            "app"   => $app
-        ]);
+        $api = new ShopifyApi($store);
+
         $this->api         = $api;
-        $this->shopify_app = $app;
         $this->store       = $store;
     }
 
     public function testConstructShopifyApi()
     {
-        $api = new ShopifyApi([
-            "app"   => $this->shopify_app,
-            "store" => $this->store
-        ]);
+        $api = new ShopifyApi($this->store);
         $this->assertInstanceOf(ShopifyApi::class, $api);
     }
 

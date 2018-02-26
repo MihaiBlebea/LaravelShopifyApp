@@ -40,11 +40,10 @@ class PaymentHandlerTest extends TestCase
         $app   = App::where("app_slug", $this->app_slug)->first();
         $store = Store::where("store_domain", $this->store_domain)->first();
 
-        $api = new ShopifyApi([
-            "store" => $store,
-            "app"   => $app
-        ]);
+        $api = new ShopifyApi($store);
+
         $this->api             = $api;
+        $this->shopify_app     = $app;
         $this->payment_handler = new PaymentHandler($api);
     }
 
@@ -66,10 +65,17 @@ class PaymentHandlerTest extends TestCase
         $this->assertInstanceOf(PaymentHandler::class, $payment_handler);
     }
 
-    // public function testCreateChargeMethod()
-    // {
-    //     $payment = $app->payment;
-    //     $url = $this->payment_handler->createCharge($payment);
-    //     // dd($url);
-    // }
+    public function testCreateChargeMethod()
+    {
+        $payment = $this->shopify_app->payment;
+        $url = $this->payment_handler->createCharge($payment);
+
+        $charge = $this->payment_handler->isChargeSet();
+
+        $result = strpos($url, "https://" . $this->store_domain . "/admin/charges");
+        $this->assertEquals(0, $result);
+        $this->assertTrue($charge);
+    }
+
+
 }
