@@ -1,7 +1,7 @@
 @component('mail::message')
 # Introduction
 
-The body of your message {{ $store_name }}.
+The body of your message {{ $store_domain }}.
 
 @component('mail::button', ['url' => ''])
 Button Text

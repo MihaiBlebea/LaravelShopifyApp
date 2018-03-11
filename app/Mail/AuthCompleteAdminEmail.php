@@ -26,10 +26,8 @@ class AuthCompleteAdminEmail extends Mailable
     public function build()
     {
         return $this->from("mihaiserban.blebea@gmail.com")
-                    ->view("emails.admin.auth_completed")
-                    ->with([
-                        "app"   => $this->app,
-                        "store_domain" => $this->store->store_domain,
-                    ]);
+                    ->markdown("emails.admin.auth_completed")
+                    ->subject("Hello")
+                    ->with("store_domain", $this->store->store_domain);
     }
 }
