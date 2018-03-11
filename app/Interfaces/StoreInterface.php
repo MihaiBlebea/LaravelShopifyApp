@@ -9,7 +9,5 @@ interface StoreInterface
 {
     public function hasApp(App $app);
 
-    public static function storeNewToken(AuthInterface $api, Array $data);
-
-    public function updatePivotTable(App $app);
+    public function updateAppStoreTable(App $app);
 }

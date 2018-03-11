@@ -30,31 +30,31 @@ class Store extends Model implements StoreInterface
         return ($result !== null) ? true : false;
     }
 
-    public static function storeNewToken(AuthInterface $api, Array $data)
-    {
-        // Get store details from Shopify api
-        $details = $api->getApi()->Shop->get();
+    // public static function storeNewToken(AuthInterface $api, Array $data)
+    // {
+    //     // Get store details from Shopify api
+    //     $details = $api->getApi()->Shop->get();
+    //
+    //     // Store details in database with the token
+    //     if($details)
+    //     {
+    //         $store = self::create([
+    //             "store_token" => $data["store_token"],
+    //             "store_domain" => $data["store_url"],
+    //             "store_name" => $details["name"],
+    //             "store_plan" => $details["plan_name"],
+    //             "store_owner" => $details["shop_owner"],
+    //             "store_email" => $details["email"],
+    //             "store_phone" => $details["phone"]
+    //         ]);
+    //
+    //         return $store;
+    //     } else {
+    //         throw new Exception("Could not save the store " . $data["store_url"] . " in the database", 1);
+    //     }
+    // }
 
-        // Store details in database with the token
-        if($details)
-        {
-            $store = self::create([
-                "store_token" => $data["store_token"],
-                "store_domain" => $data["store_url"],
-                "store_name" => $details["name"],
-                "store_plan" => $details["plan_name"],
-                "store_owner" => $details["shop_owner"],
-                "store_email" => $details["email"],
-                "store_phone" => $details["phone"]
-            ]);
-
-            return $store;
-        } else {
-            throw new Exception("Could not save the store " . $data["store_url"] . " in the database", 1);
-        }
-    }
-
-    public function updatePivotTable(App $app)
+    public function updateAppStoreTable(App $app)
     {
         $this->apps()->attach($app->id);
     }

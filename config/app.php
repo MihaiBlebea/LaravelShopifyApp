@@ -178,6 +178,7 @@ return [
         /*
          * Package Service Providers...
          */
+        // PHPShopify\ServiceProvider\ShopifySDKServiceProvider::class,
 
         /*
          * Application Service Providers...

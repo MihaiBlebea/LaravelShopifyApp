@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Interfaces\ApiInterface;
+use PHPShopify\Interfaces\ShopifySDKInterface;
 use App\Interfaces\AuthInterface;
 use App\Interfaces\PaymentInterface;
-use App\Models\ShopifyApi;
 use App\Models\Payment;
 use App\Models\App;
+use PHPShopify\ShopifySDK;
 use Exception;
 use App as RootApp;
 
@@ -17,12 +17,9 @@ class PaymentHandler
 
     private $charge = null;
 
-    public function __construct($api)
+    public function __construct(ShopifySDKInterface $api)
     {
-        if($api instanceof ApiInterface || $api instanceof AuthInterface)
-        {
-            $this->api = $api->getApi();
-        }
+        $this->api = $api;
     }
 
     public function createCharge(Payment $payment)
@@ -30,7 +27,7 @@ class PaymentHandler
         $charge = [
             "name"       => $payment->payment_name,
             "price"      => $payment->payment_price,
-            "return_url" => config('app.url') . $payment->payment_callback,
+            "return_url" => $redirect_url = route("payment.callback"),
             "trial_days" => $payment->payment_trial,
             "test"       => (RootApp::environment("local")) ? true : false
         ];
@@ -81,13 +78,12 @@ class PaymentHandler
     public function activateCharge(App $app, String $charge_id)
     {
         $payment_type = $app->payment->payment_type;
-
         switch($payment_type)
         {
-            case "recurring_charge":
+            case "one_time_charge":
                 return $this->oneTimePayment($charge_id);
                 break;
-            case "one_time_charge":
+            case "recurring_charge":
                 return $this->recurringPayment($charge_id);
                 break;
             case "usage_charge":

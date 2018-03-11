@@ -2,12 +2,12 @@
 
 namespace App\Interfaces;
 
-use App\Interfaces\ApiInterface;
+use PHPShopify\Interfaces\ShopifySDKInterface;
 use App\Models\App;
 
 interface InstallInterface
 {
-    public function __construct(ApiInterface $api);
+    public function __construct(ShopifySDKInterface $api);
 
     public function installApp(App $app);
 

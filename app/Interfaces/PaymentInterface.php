@@ -3,10 +3,12 @@
 namespace App\Interfaces;
 
 use App\Models\Payment;
+use PHPShopify\ShopifySDK;
+use App\Interfaces\ShopifySDKInterface;
 
 interface PaymentInterface
 {
-    public function __construct($api);
+    public function __construct(ShopifySDKInterface $api);
 
     public function charge(Payment $payment);
 

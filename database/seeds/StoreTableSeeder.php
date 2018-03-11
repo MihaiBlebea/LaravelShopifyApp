@@ -6,15 +6,15 @@ use App\Models\Store;
 class StoreTableSeeder extends Seeder
 {
     public $data = [
-        [
-            "store_name"   => "mihaidev",
-            "store_plan"   => "affiliate",
-            "store_token"  => "2d4b2adb092b609943672876b075d4ab",
-            "store_owner"  => "mihaidev Admin",
-            "store_domain" => "mihaidev.myshopify.com",
-            "store_email"  => "mihaiserban.blebea@gmail.com",
-            "store_phone"  => "0757103898"
-        ],
+        // [
+        //     "store_name"   => "mihaidev",
+        //     "store_plan"   => "affiliate",
+        //     "store_token"  => "2d4b2adb092b609943672876b075d4ab",
+        //     "store_owner"  => "mihaidev Admin",
+        //     "store_domain" => "mihaidev.myshopify.com",
+        //     "store_email"  => "mihaiserban.blebea@gmail.com",
+        //     "store_phone"  => "0757103898"
+        // ],
         [
             "store_name"   => "Canton",
             "store_plan"   => "Profesional",

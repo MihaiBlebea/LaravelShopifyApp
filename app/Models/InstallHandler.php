@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Interfaces\ApiInterface;
+use PHPShopify\Interfaces\ShopifySDKInterface;
 use App\Interfaces\InstallInterface;
-use App\Models\ShopifyApi;
 use App\Models\App;
 use App\Models\Asset;
 
@@ -12,17 +11,11 @@ class InstallHandler implements InstallInterface
 {
     private $api = null;
 
-    public function __construct(ApiInterface $api)
+    public function __construct(ShopifySDKInterface $api)
     {
-        $this->api = $api->getApi();
+        $this->api = $api;
     }
 
-    /**
-     * @param App instance
-     * @return true if all assets have been installed or
-     * @return false if any one of the assets failed to install
-     *
-     **/
     public function installApp(App $app)
     {
         $assets = $app->assets;
@@ -100,13 +93,6 @@ class InstallHandler implements InstallInterface
     {
         return $this->api->Theme($theme_id)->Asset->delete(["asset[key]" => $key]);
     }
-
-    /**
-     * @param App instance
-     * @return true if all assets have been uninstalled or
-     * @return false if any one of the assets failed to uninstall
-     *
-     **/
 
     public function uninstallApp(App $app)
     {
