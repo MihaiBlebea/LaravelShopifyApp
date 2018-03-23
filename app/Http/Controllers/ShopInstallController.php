@@ -9,8 +9,8 @@ use App\Models\PaymentHandler;
 use App\Models\InstallHandler;
 use PHPShopify\ShopifySDK;
 use PHPShopify\AuthHelper;
-use App\Events\AuthSetupCompletedEvent;
 use Exception;
+use Log;
 
 
 class ShopInstallController extends Controller
@@ -108,7 +108,7 @@ class ShopInstallController extends Controller
             /*
              * Trigger AuthSetupCompletedEvent and send notifications
              */
-            event(new AuthSetupCompletedEvent($app, $store));
+            Log::info("Auth process finalized between app " . $app->app_name . " and store " . $store->store_name);
 
             /*
              * Use the callback to obtain the users accept on the payment
@@ -151,7 +151,7 @@ class ShopInstallController extends Controller
                 /*
                  * Trigger AuthSetupCompletedEvent and send notifications
                  */
-                event(new PaymentSetupCompletedEvent($app, $store));
+                Log::info("Payment process finalized between app " . $app->app_name . " and store " . $store->store_name);
 
                 $install_callback = route("install.callback", [
                     "app"   => $app->app_slug,
@@ -180,7 +180,7 @@ class ShopInstallController extends Controller
             /*
              * Trigger AuthSetupCompletedEvent and send notifications
              */
-            event(new PaymentSetupCompletedEvent($app, $store));
+            Log::info("Install assets process finalized between app " . $app->app_name . " and store " . $store->store_name);
 
             /*
              * Return user to the admin section when all flow is completed
