@@ -7,17 +7,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 class EventServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        "App\Events\AuthSetupCompletedEvent" => [
-            "App\Listeners\AuthCompleteAdminNotification"
-        ],
-        "App\Events\PaymentSetupCompletedEvent" => [
-            "App\Listeners\PaymentCompleteAdminNotification"
-        ],
-        "App\Events\AssetSetupCompletedEvent" => [
-            "App\Listeners\AssetCompleteAdminNotification"
-        ],
-    ];
+    protected $listen = [];
 
     public function boot()
     {
