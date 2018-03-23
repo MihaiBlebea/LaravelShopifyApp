@@ -11,4 +11,6 @@ Route::prefix("payment")->group(function () {
     Route::get("/all/{app}", "PaymentController@getAllPayments");
 });
 
-Route::get("/index", "TestController@index");
+Route::get("/index", function() {
+    dd("works");
+});
