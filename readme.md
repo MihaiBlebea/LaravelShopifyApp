@@ -1,4 +1,4 @@
 ## Install app
 - Clone repo
-- Run composer install
+- Run ``` composer install ```
 - Get the app details
