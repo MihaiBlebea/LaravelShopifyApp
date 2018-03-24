@@ -61,6 +61,12 @@
             "php artisan storage:link"
         ]
     },
+    "scripts-descriptions": {
+        "phpunit": "Run PHP Unit on Mac",
+        "phpunit-windows": "Run PHP Unit on Windows",
+        "refresh": "Refresh the database with seeder information, dummy data",
+        "setup-env": "Setup the local env befor starting the app"
+    },
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
