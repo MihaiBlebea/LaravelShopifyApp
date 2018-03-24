@@ -7,6 +7,14 @@ Route::prefix("install")->group(function () {
     Route::get("/{store}/{app}", "ShopInstallController@installCallback")->name("install.callback");
 });
 
+Route::prefix("proxy")->group(function () {
+    Route::get("index", "ProxyController@index");
+    Route::get("get-file/{file_type}/{file_name}", "ProxyController@getFile");
+
+    Route::post("settings", "ProxyController@storeSettings");
+    Route::get("settings", "ProxyController@getSettings");
+});
+
 Route::prefix("payment")->group(function () {
     Route::get("/all/{app}", "PaymentController@getAllPayments");
 });
