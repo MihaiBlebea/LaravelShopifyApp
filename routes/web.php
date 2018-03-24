@@ -9,7 +9,7 @@ Route::prefix("install")->group(function () {
 
 Route::prefix("proxy")->group(function () {
     Route::get("index", "ProxyController@index");
-    Route::get("get-file/{file_type}/{file_name}", "ProxyController@getFile");
+    Route::get("files/{file_type}/{file_name}", "ProxyController@getFile");
 
     Route::post("settings", "ProxyController@storeSettings");
     Route::get("settings", "ProxyController@getSettings");

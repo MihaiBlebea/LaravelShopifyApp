@@ -11,7 +11,7 @@ use PHPShopify\ShopifySDK;
 use Exception;
 use App as RootApp;
 
-class PaymentHandler
+class PaymentHandler implements PaymentInterface
 {
     private $api = null;
 
